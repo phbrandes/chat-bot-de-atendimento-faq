@@ -1,0 +1,55 @@
+Chatbot de FAQ para Atendimento
+
+Um assistente virtual leve, responsivo e executado inteiramente no navegador, desenvolvido com HTML, CSS e JavaScript puro (Vanilla JS). Ideal para automatizar o atendimento inicial, tirando dúvidas frequentes de clientes sobre logística, garantias e detalhes de produtos.
+
+Como Funciona
+
+O sistema opera através de um reconhecimento simples de palavras-chave. Ao enviar uma mensagem, o script em JavaScript executa os seguintes passos:
+
+1. Captura: Pega o texto inserido pelo usuário no input.
+
+2. Normalização: Converte todo o texto para letras minúsculas, garantindo que "Frete" e "frete" sejam lidos da mesma forma.
+
+3.Mapeamento: Percorre o texto procurando correspondências exatas com as chaves cadastradas no objeto "baseDeConhecimento".
+
+4.Retorno: Injeta a resposta pré-programada no HTML da página via manipulação do DOM. Caso o assunto não seja reconhecido, retorna uma mensagem padrão.
+
+ Tecnologias Utilizadas
+
+* HTML5:Estruturação semântica da interface do chat.
+
+* CSS3: Estilização (layout do container de mensagens, botões e tipografia).
+
+* JavaScript: Lógica de identificação de strings, eventos de clique/teclado e atualização dinâmica da interface.
+
+  Como Hospedar no GitHub Pages
+
+Como este projeto é 100% estático (não depende de banco de dados ou servidor back-end), ele pode ser publicado gratuitamente no GitHub Pages em poucos minutos:
+
+1. Crie um novo repositório no seu GitHub.
+
+2. Faça o upload do arquivo "index.html".
+
+3. Acesse a aba Settings (Configurações) do seu repositório.
+
+4. No menu lateral esquerdo, clique em "Pages".
+
+5. Na seção "Build and deployment", no campo "Source", selecione a opção "Deploy from a branch".
+
+6. Abaixo disso, selecione a branch 'main' (ou 'master') e clique em "Save".
+
+7. Em alguns minutos, o GitHub fornecerá o link público do seu site!
+
+ Customização de Respostas
+
+Para adaptar o assistente para a sua loja, basta editar o objeto "baseDeConhecimento" localizado dentro da tag '<script>' no arquivo 'index.html'. 
+
+Você pode adicionar respostas técnicas sobre os seus próprios produtos. Exemplo:
+
+```javascript
+const baseDeConhecimento = {
+    "frete": "Trabalhamos com a logística Full para garantir a entrega mais rápida possível.",
+    "(d1 pro)": "O drone (d1 pro) é focado em performance, ideal para manobras, e possui motores brushless.",
+    "attack shark": "O teclado Attack Shark X68HE possui switches magnéticos de acionamento ultrarrápido.",
+    "fifine": "O microfone Fifine AM8 possui conexão USB e XLR, excelente para transmissões e gravação."
+};
