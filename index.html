@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot de FAQ</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; }
+        #chat-box { 
+            border: 1px solid #ccc; 
+            border-radius: 8px;
+            height: 300px; 
+            overflow-y: auto; 
+            padding: 10px; 
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .user-msg { color: #0056b3; margin-bottom: 8px; text-align: right;}
+        .bot-msg { color: #28a745; margin-bottom: 8px; }
+        #input-container { display: flex; }
+        #user-input { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+        button { padding: 8px 12px; margin-left: 5px; cursor: pointer; border: none; background-color: #0056b3; color: white; border-radius: 4px;}
+    </style>
+</head>
+<body>
+
+    <h2>Atendimento Virtual</h2>
+    
+    <div id="chat-box">
+        <p class="bot-msg"><strong>Assistente:</strong> Olá! Como posso ajudar você hoje?</p>
+    </div>
+    
+    <div id="input-container">
+        <input type="text" id="user-input" placeholder="Digite sua pergunta..." onkeypress="verificarEnter(event)">
+        <button onclick="enviarMensagem()">Enviar</button>
+    </div>
+
+    <script>
+        // 1. Base de conhecimento (Objeto em JavaScript, equivalente ao Dicionário do Python)
+        const baseDeConhecimento = {
+            "frete": "Trabalhamos com envio expresso para todo o Brasil. O prazo e valor são calculados na página do produto.",
+            "garantia": "Nossos produtos possuem garantia de 90 dias contra defeitos de fabricação.",
+            "estoque": "Se o produto está ativo no anúncio, temos a pronta entrega para envio imediato!",
+            "devolução": "Você tem até 7 dias corridos após o recebimento para solicitar a devolução."
+        };
+
+        // Função para permitir o envio apertando a tecla "Enter"
+        function verificarEnter(event) {
+            if (event.key === "Enter") {
+                enviarMensagem();
+            }
+        }
+
+        // Função principal ativada ao clicar no botão "Enviar"
+        function enviarMensagem() {
+            const inputField = document.getElementById("user-input");
+            const chatBox = document.getElementById("chat-box");
+            const textoDigitado = inputField.value;
+            const mensagemUsuario = textoDigitado.toLowerCase();
+
+            // Se o campo estiver vazio, não faz nada
+            if (mensagemUsuario.trim() === "") return;
+
+            // Mostra a mensagem do usuário na tela
+            chatBox.innerHTML += `<p class="user-msg"><strong>Você:</strong> ${textoDigitado}</p>`;
+
+            // 2. Lógica de busca e resposta
+            let respostaEncontrada = false;
+
+            // O Object.entries transforma o objeto em um array para podermos percorrê-lo
+            for (const [palavraChave, resposta] of Object.entries(baseDeConhecimento)) {
+                if (mensagemUsuario.includes(palavraChave)) { // Verifica se a palavra-chave está na frase
+                    chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> ${resposta}</p>`;
+                    respostaEncontrada = true;
+                    break; // Interrompe o loop
+                }
+            }
+
+            // 3. Resposta padrão
+            if (!respostaEncontrada) {
+                chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> Desculpe, não entendi. Você pode me perguntar sobre frete, garantia, estoque ou devolução.</p>`;
+            }
+
+            // Limpa o campo de texto e rola o chat para a última mensagem
+            inputField.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>
