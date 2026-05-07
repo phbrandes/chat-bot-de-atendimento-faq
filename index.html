@@ -4,91 +4,108 @@
     <meta charset="UTF-8">
     <title>Chatbot de FAQ</title>
     <style>
-       body { 
+      body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    background-color: #0f172a; /* Fundo escuro */
-    color: #f8fafc; /* Texto claro */
-    max-width: 450px; 
+    /* 1. Configuração da Imagem de Fundo */
+    background-image: url('fundo.png'); /* Certifique-se de que o nome da imagem está igualzinho aqui */
+    background-size: cover; /* Faz a imagem cobrir a tela toda */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Deixa o fundo fixo ao rolar a página */
+    
+    color: #ffffff; /* Texto branco para contrastar com o fundo */
+    max-width: 600px; 
     margin: 40px auto; 
     padding: 20px;
+    height: 100vh;
 }
 
 h2 {
     text-align: center;
-    color: #38bdf8; /* Azul neon/ciano */
+    color: #ffffff;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Sombra no texto para leitura mais fácil */
 }
 
+/* Efeito de Vidro na Caixa do Chat */
 #chat-box { 
-    background-color: #1e293b; /* Fundo da caixa de mensagens */
-    border: 1px solid #334155; 
-    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.4); /* Fundo preto semi-transparente */
+    backdrop-filter: blur(12px); /* O famoso efeito de desfoque/vidro! */
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda clarinha */
+    border-radius: 20px;
     height: 380px; 
     overflow-y: auto; 
-    padding: 15px; 
-    margin-bottom: 15px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+    padding: 20px; 
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     display: flex;
     flex-direction: column;
 }
 
-/* Estilo das "bolhas" de mensagem */
+/* Bolhas de Mensagem */
 .user-msg, .bot-msg {
-    padding: 10px 14px;
-    border-radius: 12px;
-    margin-bottom: 10px;
+    padding: 12px 16px;
+    border-radius: 15px;
+    margin-bottom: 12px;
     max-width: 80%;
     line-height: 1.4;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .user-msg { 
-    background-color: #38bdf8; 
-    color: #0f172a; 
-    align-self: flex-end; /* Joga a mensagem do usuário para a direita */
-    border-bottom-right-radius: 2px; /* Detalhe na ponta da bolha */
+    background: rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(5px);
+    align-self: flex-end; 
+    border-bottom-right-radius: 2px; 
 }
 
 .bot-msg { 
-    background-color: #334155; 
-    color: #f8fafc; 
-    align-self: flex-start; /* Joga a mensagem do bot para a esquerda */
+    background: rgba(0, 0, 0, 0.6); 
+    align-self: flex-start; 
     border-bottom-left-radius: 2px;
 }
 
+/* O Formato Cápsula com Efeito de Vidro no Input */
 #input-container { 
     display: flex; 
-    gap: 8px; /* Espaço entre o campo e o botão */
+    background: rgba(0, 0, 0, 0.4); /* Vidro escuro */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px; /* Isso faz o formato de cápsula arredondada */
+    padding: 5px 5px 5px 20px; /* Espaço interno */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 #user-input { 
     flex: 1; 
-    padding: 12px; 
-    border-radius: 8px; 
-    border: 1px solid #334155; 
-    background-color: #1e293b;
+    background: transparent; /* O input fica transparente para mostrar o vidro atrás */
+    border: none; 
     color: white;
+    font-size: 16px;
     outline: none;
 }
 
-#user-input:focus {
-    border-color: #38bdf8; /* Brilha em azul ao clicar para digitar */
+#user-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 button { 
-    padding: 12px 18px; 
+    padding: 12px 25px; 
     cursor: pointer; 
     border: none; 
-    background-color: #38bdf8; 
-    color: #0f172a; 
+    background-color: #ffffff; /* Botão branco */
+    color: #000000; 
     font-weight: bold;
-    border-radius: 8px;
-    transition: background-color 0.2s; /* Animação suave ao passar o mouse */
+    border-radius: 40px; /* Botão arredondado acompanhando a cápsula */
+    transition: background-color 0.3s, transform 0.1s; 
 }
 
 button:hover {
-    background-color: #0284c7; /* Escurece um pouco ao passar o mouse */
-    color: white;
+    background-color: #e0e0e0; 
+    transform: scale(1.05); /* Efeito de crescer um pouquinho ao passar o mouse */
 }
     </style>
 </head>
