@@ -4,21 +4,92 @@
     <meta charset="UTF-8">
     <title>Chatbot de FAQ</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; }
-        #chat-box { 
-            border: 1px solid #ccc; 
-            border-radius: 8px;
-            height: 300px; 
-            overflow-y: auto; 
-            padding: 10px; 
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-        }
-        .user-msg { color: #0056b3; margin-bottom: 8px; text-align: right;}
-        .bot-msg { color: #28a745; margin-bottom: 8px; }
-        #input-container { display: flex; }
-        #user-input { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
-        button { padding: 8px 12px; margin-left: 5px; cursor: pointer; border: none; background-color: #0056b3; color: white; border-radius: 4px;}
+       body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #0f172a; /* Fundo escuro */
+    color: #f8fafc; /* Texto claro */
+    max-width: 450px; 
+    margin: 40px auto; 
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #38bdf8; /* Azul neon/ciano */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+#chat-box { 
+    background-color: #1e293b; /* Fundo da caixa de mensagens */
+    border: 1px solid #334155; 
+    border-radius: 12px;
+    height: 380px; 
+    overflow-y: auto; 
+    padding: 15px; 
+    margin-bottom: 15px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo das "bolhas" de mensagem */
+.user-msg, .bot-msg {
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    line-height: 1.4;
+}
+
+.user-msg { 
+    background-color: #38bdf8; 
+    color: #0f172a; 
+    align-self: flex-end; /* Joga a mensagem do usuário para a direita */
+    border-bottom-right-radius: 2px; /* Detalhe na ponta da bolha */
+}
+
+.bot-msg { 
+    background-color: #334155; 
+    color: #f8fafc; 
+    align-self: flex-start; /* Joga a mensagem do bot para a esquerda */
+    border-bottom-left-radius: 2px;
+}
+
+#input-container { 
+    display: flex; 
+    gap: 8px; /* Espaço entre o campo e o botão */
+}
+
+#user-input { 
+    flex: 1; 
+    padding: 12px; 
+    border-radius: 8px; 
+    border: 1px solid #334155; 
+    background-color: #1e293b;
+    color: white;
+    outline: none;
+}
+
+#user-input:focus {
+    border-color: #38bdf8; /* Brilha em azul ao clicar para digitar */
+}
+
+button { 
+    padding: 12px 18px; 
+    cursor: pointer; 
+    border: none; 
+    background-color: #38bdf8; 
+    color: #0f172a; 
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.2s; /* Animação suave ao passar o mouse */
+}
+
+button:hover {
+    background-color: #0284c7; /* Escurece um pouco ao passar o mouse */
+    color: white;
+}
     </style>
 </head>
 <body>
