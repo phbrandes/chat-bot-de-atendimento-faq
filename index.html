@@ -123,55 +123,66 @@ button:hover {
     </div>
 
     <script>
-        // 1. Base de conhecimento (Objeto em JavaScript, equivalente ao Dicionário do Python)
-        const baseDeConhecimento = {
-            "frete": "Trabalhamos com envio expresso para todo o Brasil. O prazo e valor são calculados na página do produto.",
-            "garantia": "Nossos produtos possuem garantia de 90 dias contra defeitos de fabricação.",
-            "estoque": "Se o produto está ativo no anúncio, temos a pronta entrega para envio imediato!",
-            "devolução": "Você tem até 7 dias corridos após o recebimento para solicitar a devolução."
-        };
+    // 1. Dicionário de Dúvidas Gerais
+const baseDeConhecimento = {
+    "frete": "Trabalhamos com envio expresso para todo o Brasil. O prazo é calculado no carrinho.",
+    "garantia": "Nossos produtos possuem garantia de 90 dias contra defeitos de fabricação.",
+    "devolução": "Você tem até 7 dias corridos após o recebimento para solicitar a devolução."
+};
 
-        // Função para permitir o envio apertando a tecla "Enter"
-        function verificarEnter(event) {
-            if (event.key === "Enter") {
-                enviarMensagem();
+// 2. NOVO: Dicionário específico para o Estoque de Produtos
+const estoqueProdutos = {
+    "teclado x68": "Sim! Temos o Teclado X68 a pronta entrega nas cores Branco e Preto.",
+    "mouse": "O Mouse Sem Fio está esgotado no momento. Nova remessa chega na sexta-feira!",
+    "monitor": "Temos as últimas 2 unidades do Monitor 144hz no estoque. Aproveite!"
+};
+
+function verificarEnter(event) {
+    if (event.key === "Enter") {
+        enviarMensagem();
+    }
+}
+
+function enviarMensagem() {
+    const inputField = document.getElementById("user-input");
+    const chatBox = document.getElementById("chat-box");
+    const textoDigitado = inputField.value;
+    const mensagemUsuario = textoDigitado.toLowerCase();
+
+    if (mensagemUsuario.trim() === "") return;
+
+    chatBox.innerHTML += `<p class="user-msg"><strong>Você:</strong> ${textoDigitado}</p>`;
+
+    let respostaEncontrada = false;
+
+    // PASSO A: O bot procura PRIMEIRO se o usuário digitou o nome de algum produto
+    for (const [produto, respostaEstoque] of Object.entries(estoqueProdutos)) {
+        if (mensagemUsuario.includes(produto)) {
+            chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> ${respostaEstoque}</p>`;
+            respostaEncontrada = true;
+            break; 
+        }
+    }
+
+    // PASSO B: Se não achou nenhum produto, ele procura nas dúvidas gerais (frete, devolução)
+    if (!respostaEncontrada) {
+        for (const [palavraChave, respostaGeral] of Object.entries(baseDeConhecimento)) {
+            if (mensagemUsuario.includes(palavraChave)) {
+                chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> ${respostaGeral}</p>`;
+                respostaEncontrada = true;
+                break;
             }
         }
+    }
 
-        // Função principal ativada ao clicar no botão "Enviar"
-        function enviarMensagem() {
-            const inputField = document.getElementById("user-input");
-            const chatBox = document.getElementById("chat-box");
-            const textoDigitado = inputField.value;
-            const mensagemUsuario = textoDigitado.toLowerCase();
+    // PASSO C: Resposta padrão caso ele não identifique nem o produto, nem a dúvida geral
+    if (!respostaEncontrada) {
+        chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> Desculpe, não entendi. Você pode me perguntar sobre nosso estoque de produtos (ex: teclado, mouse), frete ou garantia.</p>`;
+    }
 
-            // Se o campo estiver vazio, não faz nada
-            if (mensagemUsuario.trim() === "") return;
-
-            // Mostra a mensagem do usuário na tela
-            chatBox.innerHTML += `<p class="user-msg"><strong>Você:</strong> ${textoDigitado}</p>`;
-
-            // 2. Lógica de busca e resposta
-            let respostaEncontrada = false;
-
-            // O Object.entries transforma o objeto em um array para podermos percorrê-lo
-            for (const [palavraChave, resposta] of Object.entries(baseDeConhecimento)) {
-                if (mensagemUsuario.includes(palavraChave)) { // Verifica se a palavra-chave está na frase
-                    chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> ${resposta}</p>`;
-                    respostaEncontrada = true;
-                    break; // Interrompe o loop
-                }
-            }
-
-            // 3. Resposta padrão
-            if (!respostaEncontrada) {
-                chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> Desculpe, não entendi. Você pode me perguntar sobre frete, garantia, estoque ou devolução.</p>`;
-            }
-
-            // Limpa o campo de texto e rola o chat para a última mensagem
-            inputField.value = "";
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+    inputField.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
     </script>
 
 </body>
