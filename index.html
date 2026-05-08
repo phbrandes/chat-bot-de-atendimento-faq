@@ -107,15 +107,44 @@ button:hover {
     background-color: #e0e0e0; 
     transform: scale(1.05); /* Efeito de crescer um pouquinho ao passar o mouse */
 }
+
+/* Quick Replies */
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.quick-replies button {
+    padding: 10px 14px;
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: 999px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quick-replies button:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.03);
+}
     </style>
 </head>
+
 <body>
 
     <h2>Atendimento Virtual</h2>
     
     <div id="chat-box">
         <p class="bot-msg"><strong>Assistente:</strong> Olá! Como posso ajudar você hoje?</p>
+        <div id="quick-replies" class="quick-replies">
+            <button type="button" onclick="quickReply('rastreio')">📦 Rastrear Pedido</button>
+            <button type="button" onclick="quickReply('prazo')">🚚 Prazo de Frete</button>
+            <button type="button" onclick="quickReply('produtos')">🛍️ Ver Produtos</button>
+            <button type="button" onclick="quickReply('café')">☕ Café</button>
+        </div>
     </div>
+
     
     <div id="input-container">
         <input type="text" id="user-input" placeholder="Digite sua pergunta..." onkeypress="verificarEnter(event)">
@@ -150,10 +179,43 @@ const baseDeConhecimento = {
 
 // 2. Dicionário de Estoque de Produtos
 const estoqueProdutos = {
-    "teclado": "Sim! Temos o Teclado X68 a pronta entrega nas cores Branco e Preto.",
-    "mouse": "O Mouse Sem Fio está esgotado no momento. Nova remessa chega na sexta-feira!",
-    "monitor": "Temos as últimas 2 unidades do Monitor 144hz no estoque. Aproveite!",
-    "café": "Temos sim! Atualmente temos 10 pacotes do Café 3 Corações disponíveis no estoque.",
+    // Periféricos e Acessórios
+    "teclado": "Temos o Teclado Mecânico RGB switch azul a pronta entrega!",
+    "mouse": "O Mouse Gamer sem fio de 10.000 DPI está em promoção. Últimas unidades!",
+    "mousepad": "Temos o Mousepad Gigante (90x40cm) com bordas costuradas em estoque.",
+    "headset": "O Headset Bluetooth com cancelamento de ruído está disponível nas cores preto e branco.",
+    "webcam": "Temos a Webcam Full HD 1080p com microfone embutido pronta para envio.",
+    "microfone": "O Microfone Condensador de mesa USB está disponível. Ideal para podcasts e lives!",
+
+    // Monitores e Cadeiras
+    "monitor": "Temos as últimas 2 unidades do Monitor 144hz IPS no estoque. Aproveite!",
+    "suporte": "O Suporte Articulado de mesa para 2 monitores está disponível.",
+    "cadeira": "A Cadeira Gamer ergonômica reclinável chega em nova remessa na sexta-feira.",
+
+    // Hardware (Peças de PC)
+    "ssd": "Temos SSDs NVMe de 1TB e 2TB a pronta entrega para deixar seu PC voando.",
+    "memória": "Kits de Memória RAM 16GB (2x8GB) 3200MHz estão disponíveis no estoque.",
+    "ram": "Kits de Memória RAM 16GB (2x8GB) 3200MHz estão disponíveis no estoque.", // Sinônimo para facilitar a busca
+    "placa de vídeo": "A Placa de Vídeo RTX 4060 está esgotada. Previsão de chegada para a próxima semana.",
+    "processador": "Temos o Processador Core i7 de 13ª geração a pronta entrega.",
+    "placa mãe": "Placas-mãe com soquete AM4 e LGA1700 disponíveis. Qual modelo você procura?",
+    "gabinete": "Temos o Gabinete Aquário com 4 ventoinhas RGB inclusas no estoque.",
+    "fonte": "Fontes de 650W com selo 80 Plus Bronze disponíveis a pronta entrega.",
+
+    // Extras e Sobrevivência Dev
+    "nobreak": "O Nobreak de 1200VA está disponível para proteger seus equipamentos.",
+    "hub usb": "Temos Hub USB 3.0 de 4 portas em estoque.",
+    "ring light": "A Ring Light de 10 polegadas com tripé de mesa está disponível.",
+    "caneca": "A Caneca Térmica inteligente que mantém seu café quente por 4 horas está em estoque!",
+    "café": "Temos sim! Atualmente temos 10 pacotes do Café 3 Corações disponíveis no estoque. O combustível oficial dos devs! ☕"
+};
+// 3. NOVO: Dicionário de Departamentos/Categorias
+const departamentos = {
+    "periféricos": "Na seção de Periféricos temos: <b>teclado, mouse, mousepad, headset, webcam e microfone</b>. Sobre qual deles você quer saber o estoque?",
+    "monitores": "Nessa área temos: <b>monitor, suporte e cadeira</b>. Qual deles você quer verificar?",
+    "cadeiras": "Nessa área temos: <b>monitor, suporte e cadeira</b>. Qual deles você quer verificar?", // Sinônimo
+    "hardware": "Em Hardware trabalhamos com: <b>SSD, memória, placa de vídeo, processador, placa mãe, gabinete e fonte</b>. Qual peça você busca?",
+    "extras": "Nos Extras temos: <b>nobreak, hub USB, ring light, caneca e o nosso famoso café!</b> Sobre qual deseja saber mais?"
 };
 
 function verificarEnter(event) {
@@ -162,7 +224,14 @@ function verificarEnter(event) {
     }
 }
 
+function quickReply(texto) {
+    const inputField = document.getElementById("user-input");
+    inputField.value = texto;
+    enviarMensagem();
+}
+
 function enviarMensagem() {
+
     const inputField = document.getElementById("user-input");
     const chatBox = document.getElementById("chat-box");
     const textoDigitado = inputField.value;
@@ -191,35 +260,56 @@ chatBox.scrollTop = chatBox.scrollHeight;
 
     const mensagemNormalizada = normalizar(textoDigitado);
 
-    // PASSO EXTRA: Detecta perguntas do tipo "quais produtos estao disponiveis / o que tem na loja"
-    // e monta a lista a partir do estoqueProdutos.
+    // PASSO EXTRA: Quando a pessoa pergunta “quais produtos estão disponíveis / o que tem na loja”
+    // em vez de listar tudo (pode ficar enorme), pedimos a categoria/departamento.
     if (
-        mensagemNormalizada.includes('produto') &&
+        (
+            mensagemNormalizada.includes('quais') ||
+            mensagemNormalizada.includes('quais produtos') ||
+            mensagemNormalizada.includes('produtos') ||
+            mensagemNormalizada.includes('o que tem') ||
+            mensagemNormalizada.includes('tem na loja') ||
+            mensagemNormalizada.includes('na loja') ||
+            mensagemNormalizada.includes('no estoque') ||
+            mensagemNormalizada.includes('estoque')
+        ) &&
+
         (
             mensagemNormalizada.includes('dispon') ||
             mensagemNormalizada.includes('disponivel') ||
             mensagemNormalizada.includes('disponiveis') ||
             mensagemNormalizada.includes('tem') ||
-            mensagemNormalizada.includes('na loja') ||
-            mensagemNormalizada.includes('nao loja') ||
             mensagemNormalizada.includes('o que tem') ||
-            mensagemNormalizada.includes('o que tem na')
+            mensagemNormalizada.includes('produtos')
         )
     ) {
-        const listaProdutos = Object.keys(estoqueProdutos)
-            .map((k) => k.charAt(0).toUpperCase() + k.slice(1))
-            .join(', ');
-
-        respostaFinal = `Temos estes produtos na loja: ${listaProdutos}.`;
+        respostaFinal = "Qual departamento/categoria você está procurando? (Periféricos, Monitores, Cadeiras, Hardware ou Extras)";
         respostaEncontrada = true;
+    }
+
+
+// Detecta qual departamento a pessoa quer (ex: “periféricos”, “monitores”, “cadeiras”, “hardware”, “extras”)
+    if (!respostaEncontrada) {
+        for (const [depChave, depTexto] of Object.entries(departamentos)) {
+            if (mensagemNormalizada.includes(depChave)) {
+                respostaFinal = depTexto;
+                respostaEncontrada = true;
+                break;
+            }
+        }
     }
 
     // Tratamento separado para capturar frases mais soltas como "o que tem na loja"
     if (!respostaEncontrada) {
+
         const temNaLoja =
             mensagemNormalizada.includes('o que tem na loja') ||
             mensagemNormalizada.includes('o que tem na') ||
-            (mensagemNormalizada.includes('o que tem') && mensagemNormalizada.includes('loja'));
+            (mensagemNormalizada.includes('o que tem') && mensagemNormalizada.includes('loja')) ||
+            mensagemNormalizada.includes('o que teria no estoque') ||
+            mensagemNormalizada.includes('o que tem no estoque') ||
+            mensagemNormalizada.includes('no estoque') ||
+            mensagemNormalizada.includes('estoque');
 
         if (temNaLoja) {
             const listaProdutos = Object.keys(estoqueProdutos)
