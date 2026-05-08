@@ -154,8 +154,17 @@ function enviarMensagem() {
 
     if (mensagemUsuario.trim() === "") return;
 
-    chatBox.innerHTML += `<p class="user-msg"><strong>Você:</strong> ${textoDigitado}</p>`;
+   // O código pega a mensagem do usuário, exibe e rola a tela para baixo
+chatBox.innerHTML += `<p class="user-msg"><strong>Você:</strong> ${textoDigitado}</p>`;
+inputField.value = ""; 
+chatBox.scrollTop = chatBox.scrollHeight;
 
+// -> ADICIONE ISSO AQUI: Cria o ID único e exibe o "digitando..."
+const idDigitando = "digitando-" + Date.now();
+chatBox.innerHTML += `<p class="bot-msg" id="${idDigitando}"><em>Assistente está digitando...</em></p>`;
+chatBox.scrollTop = chatBox.scrollHeight;
+
+    let respostaFinal = "";
     let respostaEncontrada = false;
 
     // PASSO NOVO: Verifica se o usuário digitou um número de pedido (ex: #1234)
@@ -169,7 +178,7 @@ function enviarMensagem() {
     if (!respostaEncontrada) {
         for (const [produto, respostaEstoque] of Object.entries(estoqueProdutos)) {
             if (mensagemUsuario.includes(produto)) {
-                chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> ${respostaEstoque}</p>`;
+                respostaFinal = respostaEstoque;
                 respostaEncontrada = true;
                 break; 
             }
@@ -180,7 +189,7 @@ function enviarMensagem() {
     if (!respostaEncontrada) {
         for (const [palavraChave, respostaGeral] of Object.entries(baseDeConhecimento)) {
             if (mensagemUsuario.includes(palavraChave)) {
-                chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> ${respostaGeral}</p>`;
+                respostaFinal = respostaGeral;
                 respostaEncontrada = true;
                 break;
             }
@@ -189,11 +198,21 @@ function enviarMensagem() {
 
     // PASSO C: Resposta padrão
     if (!respostaEncontrada) {
-        chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> Desculpe, não entendi. Você pode me perguntar sobre produtos, prazos de frete, ou consultar um pedido usando a #.</p>`;
+        respostaFinal = "Desculpe, não consegui entender sua pergunta. Por favor, tente reformular ou entre em contato com nosso suporte pelo telefone (11) 1234-5678.";
+    }
+// O CRONÔMETRO DE 1.5 SEGUNDOS
+setTimeout(() => {
+    // 1. Procura aquele "digitando..." que criamos no Passo 1 e apaga ele da tela
+    const avisoDigitando = document.getElementById(idDigitando);
+    if (avisoDigitando) {
+        avisoDigitando.remove();
     }
 
-    inputField.value = "";
+    // 2. Agora sim, injeta a resposta que guardamos na variável direto na tela!
+    chatBox.innerHTML += `<p class="bot-msg"><strong>Assistente:</strong> ${respostaFinal}</p>`;
     chatBox.scrollTop = chatBox.scrollHeight;
+    
+}, 1500);
 }
     </script>
 
