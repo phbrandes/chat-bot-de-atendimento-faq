@@ -123,7 +123,7 @@ button:hover {
     </div>
 
     <script>
-// 1. Dicionário de Dúvidas Gerais (Atualizado)
+// 1. Dicionário de Dúvidas Gerais
 const baseDeConhecimento = {
     "frete médio": "Nosso tempo médio de entrega é de 3 a 5 dias úteis para o Sul/Sudeste e 7 a 10 dias úteis para as demais regiões.",
     "prazo": "O prazo de entrega varia de 3 a 10 dias úteis, dependendo da sua região.",
@@ -137,7 +137,8 @@ const baseDeConhecimento = {
 const estoqueProdutos = {
     "teclado": "Sim! Temos o Teclado X68 a pronta entrega nas cores Branco e Preto.",
     "mouse": "O Mouse Sem Fio está esgotado no momento. Nova remessa chega na sexta-feira!",
-    "monitor": "Temos as últimas 2 unidades do Monitor 144hz no estoque. Aproveite!"
+    "monitor": "Temos as últimas 2 unidades do Monitor 144hz no estoque. Aproveite!",
+    "café": "Temos sim! Atualmente temos 10 pacotes do Café 3 Corações disponíveis no estoque.",
 };
 
 function verificarEnter(event) {
@@ -166,6 +167,56 @@ chatBox.scrollTop = chatBox.scrollHeight;
 
     let respostaFinal = "";
     let respostaEncontrada = false;
+
+    // Normaliza para reconhecer variações com/sem acento
+    const normalizar = (str) => str
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase();
+
+    const mensagemNormalizada = normalizar(textoDigitado);
+
+    // PASSO EXTRA: Detecta perguntas do tipo "quais produtos estao disponiveis / o que tem na loja"
+    // e monta a lista a partir do estoqueProdutos.
+    if (
+        mensagemNormalizada.includes('produto') &&
+        (
+            mensagemNormalizada.includes('dispon') ||
+            mensagemNormalizada.includes('disponivel') ||
+            mensagemNormalizada.includes('disponiveis') ||
+            mensagemNormalizada.includes('tem') ||
+            mensagemNormalizada.includes('na loja') ||
+            mensagemNormalizada.includes('nao loja') ||
+            mensagemNormalizada.includes('o que tem') ||
+            mensagemNormalizada.includes('o que tem na')
+        )
+    ) {
+        const listaProdutos = Object.keys(estoqueProdutos)
+            .map((k) => k.charAt(0).toUpperCase() + k.slice(1))
+            .join(', ');
+
+        respostaFinal = `Temos estes produtos na loja: ${listaProdutos}.`;
+        respostaEncontrada = true;
+    }
+
+    // Tratamento separado para capturar frases mais soltas como "o que tem na loja"
+    if (!respostaEncontrada) {
+        const temNaLoja =
+            mensagemNormalizada.includes('o que tem na loja') ||
+            mensagemNormalizada.includes('o que tem na') ||
+            (mensagemNormalizada.includes('o que tem') && mensagemNormalizada.includes('loja'));
+
+        if (temNaLoja) {
+            const listaProdutos = Object.keys(estoqueProdutos)
+                .map((k) => k.charAt(0).toUpperCase() + k.slice(1))
+                .join(', ');
+
+            respostaFinal = `Temos estes produtos na loja: ${listaProdutos}.`;
+            respostaEncontrada = true;
+        }
+    }
+
+
 
     // PASSO NOVO: Verifica se o usuário digitou um número de pedido (ex: #1234)
     // O includes("#") verifica se tem a hashtag na mensagem
