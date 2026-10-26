@@ -37,8 +37,8 @@ Como este projeto é 100% estático (não depende de banco de dados ou servidor 
 5. Na seção "Build and deployment", no campo "Source", selecione a opção "Deploy from a branch".
 
 6. Abaixo disso, selecione a branch 'main' (ou 'master') e clique em "Save".
-
 7. Em alguns minutos, o GitHub fornecerá o link público do seu site!
+   Link online do projeto: https://phbrandes.github.io/chat-bot-de-atendimento-faq/
 
  Customização de Respostas
 

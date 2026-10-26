@@ -198,7 +198,9 @@ O projeto pode ser publicado gratuitamente em poucos minutos:
 3. Clique em **Settings** > **Pages**.
 4. Em **Build and deployment** > **Source**, selecione `Deploy from a branch`.
 5. Selecione a branch `main` e a pasta `/(root)`.
-6. Clique em **Save**. Em instantes, o seu bot estará online!
+6. Clique em **Save**. O GitHub Pages processará a publicação e disponibilizará o site no link oficial:
+   > 🚀 **URL de Produção:** **[https://phbrandes.github.io/chat-bot-de-atendimento-faq/](https://phbrandes.github.io/chat-bot-de-atendimento-faq/)**
+
 
 ---
 
